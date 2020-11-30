@@ -1,0 +1,24 @@
+{
+  "name": "nijnet",
+  "version": "0.0.1",
+  "description": "Simple application to fetch all songs of an artist using Genius API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/memoryonrepeat/nijnet.git"
+  },
+  "author": "Thanh Nguyen <tienthanh8490@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/memoryonrepeat/nijnet/issues"
+  },
+  "homepage": "https://github.com/memoryonrepeat/nijnet#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0"
+  }
+}
