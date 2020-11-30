@@ -3,16 +3,17 @@ require('dotenv').config()
 const axios = require('axios')
 
 const CLIENT_ACCESS_TOKEN = process.env.CLIENT_ACCESS_TOKEN
+const PER_PAGE = 50
 const artist = 'Imagine Dragons'
 
-const request = async (url, params) => {
+const request = async (url, params = {}) => {
   try {
     const response = await axios.get(url, {
       baseURL: 'https://api.genius.com',
       headers: {
         Authorization: `Bearer ${CLIENT_ACCESS_TOKEN}`
       },
-      params: params || {}
+      params
     })
 
     // console.log(JSON.stringify(response.data))
@@ -38,7 +39,7 @@ const getSongs = async (artistId) => {
   let page = 1
 
   while (true) {
-    const result = await request(`artists/${artistId}/songs`, {page})
+    const result = await request(`artists/${artistId}/songs`, { page, per_page: PER_PAGE})
 
     console.log({result})
 
