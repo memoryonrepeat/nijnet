@@ -38,10 +38,12 @@ const request = async (url, params = {}) => {
 }
 
 const getArtistId = async (artist) => {
+  artist = artist.toLowerCase() // Make search case-insensitive
+
   const searchResults = await request('search', {q: artist})
 
   // TODO try catch / optional chaining / fallback
-  return searchResults?.response?.hits?.find((hit) => hit?.result?.primary_artist?.name === artist)?.result?.primary_artist?.id
+  return searchResults?.response?.hits?.find((hit) => hit?.result?.primary_artist?.name?.toLowerCase() === artist)?.result?.primary_artist?.id
 }
 
 const getSongs = async (artistId) => {

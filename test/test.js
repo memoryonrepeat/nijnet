@@ -21,10 +21,18 @@ describe('nijnet', () => {
     it('should be able to fetch all songs from valid artist', async () => {
 
     })
+
+    it('should return case-insensitive results', async () => {
+
+    })
   })
 
   describe('should be able to handle unhealthy API()', () => {
     it('should be able to retry on unsuccessful response', async () => {
+
+    })
+
+    it('should be able to retry on timeout', async () => {
 
     })
 
