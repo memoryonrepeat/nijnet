@@ -6,38 +6,32 @@ const config = require('../config')
 const CLIENT_ACCESS_TOKEN = process.env.CLIENT_ACCESS_TOKEN
 
 const request = async (url, params = {}) => {
-  const options = {
-    ...config.baseUrl && {baseUrl: config.baseUrl},
-    // ...config.proxy && {proxy: config.proxy},
-    params,
-    headers: {
-      Authorization: `Bearer ${CLIENT_ACCESS_TOKEN}`
-    }
-  }
-
-  console.log(url, options)
-
   try {
-    const response = await axios.get(url, options)
-
-    console.log(JSON.stringify(response.data))
+    const response = await axios.get(url, {
+      ...config.baseURL && {baseURL: config.baseURL},
+      ...config.proxy && {proxy: config.proxy},
+      params,
+      headers: {
+        Authorization: `Bearer ${CLIENT_ACCESS_TOKEN}`
+      }
+    })
 
     return response.data
   } catch (error) {
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.log(3, error.response.data)
+      console.log(error.response.data)
       console.log(error.response.status)
       console.log(error.response.headers)
     } else if (error.request) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
-      console.log(12, error)
+      console.log(error)
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.log(11, error.message)
+      console.log(error.message)
     }
     console.log(error.config)
   }
