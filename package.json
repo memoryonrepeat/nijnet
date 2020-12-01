@@ -19,6 +19,7 @@
   "homepage": "https://github.com/memoryonrepeat/nijnet#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "bottleneck": "^2.19.5",
     "dotenv": "^8.2.0"
   },
   "devDependencies": {
