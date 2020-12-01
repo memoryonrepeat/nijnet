@@ -1,5 +1,6 @@
 const {server} = require('../mocks/server')
 const {getArtistId, getSongs} = require('../helper/request')
+const {getArtistSongs} = require('../handler')
 
 const sleep = (timeout) => {
   console.log(`Going to sleep for ${timeout} milliseconds`)
@@ -39,15 +40,21 @@ describe('handlers', () => {
       expect(res).toBe(undefined)
     })
 
-    it('should be able to fetch all songs from valid artist', async () => {
+    it('should be able to fetch all songs given valid artistId', async () => {
       const res = await getSongs(1234)
+      expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
+    })
+
+    it('should be able to fetch all songs given valid artist name', async () => {
+      const res = await getArtistSongs('linkin park')
       expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
     })
   })
 
   describe('should be able to handle unhealthy API()', () => {
     it('should be able to retry on unsuccessful response', async () => {
-
+      const res = await getSongs(1234)
+      expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
     })
 
     it('should be able to retry on timeout', async () => {
