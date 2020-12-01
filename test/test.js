@@ -54,6 +54,7 @@ describe('handlers', () => {
   describe('should be able to handle unhealthy API()', () => {
     it('should not crash on API schema changes', async () => {
       expect(() => { getArtistId('schema change') }).not.toThrow()
+      expect(await getArtistId('schema change')).toBe(undefined)
     })
 
     it('should be able to handle unsuccessful response', async () => {
