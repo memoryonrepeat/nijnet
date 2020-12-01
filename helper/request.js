@@ -33,7 +33,6 @@ const request = async (url, params = {}) => {
       // Something happened in setting up the request that triggered an Error
       console.log(error.message)
     }
-    console.log(error.config)
   }
 }
 

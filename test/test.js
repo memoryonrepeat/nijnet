@@ -52,16 +52,21 @@ describe('handlers', () => {
   })
 
   describe('should be able to handle unhealthy API()', () => {
+    it('should not crash on API schema changes', async () => {
+      expect(() => { getArtistId('schema change') }).not.toThrow()
+    })
+
+    it('should be able to handle unsuccessful response', async () => {
+      expect(() => { getArtistId('5xx error') }).not.toThrow()
+      expect(await getArtistId('5xx error')).toBe(undefined)
+    })
+
     it('should be able to retry on unsuccessful response', async () => {
-      const res = await getSongs(1234)
-      expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
+      /* const res = await getSongs(321312)
+      expect(res).toEqual(['From the inside', 'Numb', 'In the end']) */
     })
 
     it('should be able to retry on timeout', async () => {
-
-    })
-
-    it('should not crash on API schema changes', async () => {
 
     })
   })
