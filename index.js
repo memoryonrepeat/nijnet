@@ -1,6 +1,6 @@
 const {getArtistSongs} = require('./handler')
 
-const artist = 'Linkin park'
+const artist = 'linkin park'
 
 const main = async () => {
   return getArtistSongs(artist)

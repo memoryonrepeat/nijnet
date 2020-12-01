@@ -1,7 +1,8 @@
 import {rest} from 'msw'
+const config = require('../config')
 
 export const handlers = [
-  rest.get('/search?q=linkin%20park', (req, res, ctx) => {
+  rest.get(`${config.baseURL}/search?q=linkin%20park`, (req, res, ctx) => {
     // If authenticated, return a mocked user details
     return res(
       ctx.status(200),
