@@ -1,3 +1,6 @@
+const {server} = require('../mocks/server')
+const {getArtistId, getSongs} = require('../helper/request')
+
 const sleep = (timeout) => {
   console.log(`Going to sleep for ${timeout} milliseconds`)
   return new Promise((resolve) => {
@@ -8,22 +11,37 @@ const sleep = (timeout) => {
   })
 }
 
-describe('nijnet', () => {
+describe('handlers', () => {
+  // Establish API mocking before all tests.
+  beforeAll(() => server.listen())
+  // Reset any request handlers that we may add during the tests,
+  // so they don't affect other tests.
+  afterEach(() => server.resetHandlers())
+  // Clean up after the tests are finished.
+  afterAll(() => server.close())
+
   describe('should be able to handle healthy API()', () => {
     it('should be able to fetch id of valid artist', async () => {
-
+      const res = await getArtistId('Linkin Park')
+      expect(res).toBe(1234)
     })
 
-    it('should throw error on invalid artist', async () => {
+    it('should return case-insensitive results when fetching artist id', async () => {
+      const res1 = await getArtistId('Linkin park')
+      expect(res1).toBe(1234)
 
+      const res2 = await getArtistId('linkin park')
+      expect(res2).toBe(1234)
+    })
+
+    it('should return undefined on invalid artist', async () => {
+      const res = await getArtistId('some random guy')
+      expect(res).toBe(undefined)
     })
 
     it('should be able to fetch all songs from valid artist', async () => {
-
-    })
-
-    it('should return case-insensitive results', async () => {
-
+      const res = await getSongs(1234)
+      expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
     })
   })
 

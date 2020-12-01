@@ -1,41 +1,85 @@
-import {rest} from 'msw'
+const {rest} = require('msw')
 const config = require('../config')
+const ARTIST_ID = 1234
 
-export const handlers = [
-  rest.get(`${config.baseURL}/search?q=linkin%20park`, (req, res, ctx) => {
-    // If authenticated, return a mocked user details
+const getArtistIdHandler = rest.get(`${config.baseURL}/search?q=linkin%20park`, (req, res, ctx) => {
+  // console.log('Request is being intercepted:', req.url)
+  return res(
+    ctx.status(200),
+    ctx.json({
+      response: {
+        hits: [
+          {
+            result: {
+              title: 'Numb',
+              primary_artist: {
+                id: ARTIST_ID,
+                name: 'Linkin Park'
+              }
+            }
+          },
+          {
+            result: {
+              title: 'From the inside',
+              primary_artist: {
+                id: ARTIST_ID,
+                name: 'Linkin Park'
+              }
+            }
+          },
+          {
+            result: {
+              title: 'In the end',
+              primary_artist: {
+                id: ARTIST_ID,
+                name: 'Linkin Park'
+              }
+            }
+          }
+        ]
+      }
+    })
+  )
+})
+
+const getSongsHandler = rest.get(`${config.baseURL}/artists/${ARTIST_ID}/songs`, (req, res, ctx) => {
+  // console.log('Request is being intercepted:', req.url)
+  const page = req.url.searchParams.get('page')
+
+  if (page === '1') {
     return res(
       ctx.status(200),
       ctx.json({
         response: {
-          hits: [
+          songs: [
             {
-              result: {
-                title: 'Numb',
-                primary_artist: {
-                  name: 'Linkin Park'
-                }
-              }
+              title: 'From the inside'
             },
             {
-              result: {
-                title: 'From the inside',
-                primary_artist: {
-                  name: 'Linkin Park'
-                }
-              }
+              title: 'Numb'
             },
             {
-              result: {
-                title: 'In the end',
-                primary_artist: {
-                  name: 'Linkin Park'
-                }
-              }
+              title: 'In the end'
             }
-          ]
+          ],
+          next_page: 2
         }
       })
     )
-  })
+  }
+
+  return res(
+    ctx.status(200),
+    ctx.json({
+      response: {
+        songs: [],
+        next_page: null
+      }
+    })
+  )
+})
+
+exports.handlers = [
+  getArtistIdHandler,
+  getSongsHandler
 ]

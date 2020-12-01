@@ -1,5 +1,5 @@
-import {setupServer} from 'msw/node'
-import {handlers} from './handlers'
+const {setupServer} = require('msw/node')
+const {handlers} = require('./handlers')
 
 // This configures a request mocking server with the given request handlers.
-export const server = setupServer(...handlers)
+exports.server = setupServer(...handlers)

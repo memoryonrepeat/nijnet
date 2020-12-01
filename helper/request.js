@@ -47,19 +47,25 @@ const getArtistId = async (artist) => {
 }
 
 const getSongs = async (artistId) => {
+  if (!artistId){
+    console.log('Invalid artistId')
+    return []
+  }
+
   let songs = []
   let page = 1
 
   while (true) {
+    console.log(`Fetching page ${page}`)
     const result = await request(`artists/${artistId}/songs`, {page, ...config.per_page && {per_page: config.per_page}})
 
-    if (result.response.songs.length === 0) {
+    if (!result?.response?.next_page) {
       break
     }
 
     songs = [...songs, ...result.response.songs.map((song) => song.title)]
 
-    page += 1
+    page = result.response.next_page
   }
 
   return songs
