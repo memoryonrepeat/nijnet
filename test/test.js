@@ -63,8 +63,8 @@ describe('handlers', () => {
     })
 
     it('should be able to retry on unsuccessful response', async () => {
-      /* const res = await getSongs(321312)
-      expect(res).toEqual(['From the inside', 'Numb', 'In the end']) */
+      const res = await getSongs(321312)
+      expect(res).toEqual(['From the inside', 'Numb', 'In the end'])
     })
 
     it('should be able to retry on timeout', async () => {
