@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const Bottleneck = require('bottleneck')
 
 const axios = require('axios')
@@ -6,8 +7,12 @@ const config = require('../config')
 
 const CLIENT_ACCESS_TOKEN = process.env.CLIENT_ACCESS_TOKEN
 const MAX_RETRY = 5
-const RETRY_WAIT = 2000
+const RETRY_WAIT = 1000
 
+// Use Bottleneck for rate limiter
+// Not really needed in this case since
+// there is already custom-made retry mechanism
+// But I just put it here as a fallback solution
 const limiter = new Bottleneck({
   minTime: 333,
   maxConcurrent: 1
@@ -39,7 +44,7 @@ const axiosRequest = async (url, params = {}, retryCount = 0) => {
       // In either case, retry until MAX_RETRY
       const message = error.response || error.request
 
-      console.log(`Request failed on ${retryCount} try`, message)
+      console.log(message.status, message.statusText, error.response.data)
 
       if (retryCount === MAX_RETRY) {
         console.log('Max retry reached. Stopping.')
@@ -47,6 +52,8 @@ const axiosRequest = async (url, params = {}, retryCount = 0) => {
       }
 
       await sleep(RETRY_WAIT)
+
+      console.log('Retrying. Count: ', retryCount)
 
       return this.axiosRequest(url, params, retryCount + 1)
     } else {
@@ -62,10 +69,11 @@ const request = limiter.wrap(axiosRequest)
 const getArtistId = async (artist) => {
   artist = artist.toLowerCase() // Make search case-insensitive
 
-  const searchResults = await request('search', {q: artist})
+  const searchResults = await this.request('search', {q: artist})
 
-  // TODO try catch / optional chaining / fallback
-  return searchResults?.response?.hits?.find((hit) => hit?.result?.primary_artist?.name?.toLowerCase() === artist)?.result?.primary_artist?.id
+  return searchResults?.response?.hits?.find(
+    (hit) => hit?.result?.primary_artist?.name?.toLowerCase() === artist
+  )?.result?.primary_artist?.id
 }
 
 const getSongs = async (artistId) => {
@@ -79,7 +87,13 @@ const getSongs = async (artistId) => {
 
   while (true) {
     console.log(`Fetching page ${page}`)
-    const result = await request(`artists/${artistId}/songs`, {page, ...config.per_page && {per_page: config.per_page}})
+    const result = await this.request(
+      `artists/${artistId}/songs`,
+      {
+        page,
+        ...config.per_page && {per_page: config.per_page}
+      }
+    )
 
     if (!result?.response?.next_page) {
       break
@@ -90,11 +104,9 @@ const getSongs = async (artistId) => {
     page = result.response.next_page
   }
 
-  return songs
+  // Potentially remove duplicates
+  return [...new Set(songs)]
 }
-
-// request('search', {q: 'Imagine Dragons'})
-// request('songs/378195')
 
 exports.axiosRequest = axiosRequest
 exports.request = request

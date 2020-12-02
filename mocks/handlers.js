@@ -3,7 +3,7 @@ const config = require('../config')
 const ARTIST_ID = 1234
 
 const getArtistIdHandler = rest.get(`${config.baseURL}/search`, (req, res, ctx) => {
-  // console.log('Request is being intercepted:', req.url)
+  console.log('Request is being intercepted:', req.url.href)
   const q = req.url.searchParams.get('q')
 
   if (q.toLowerCase() === 'linkin park') {
@@ -45,6 +45,15 @@ const getArtistIdHandler = rest.get(`${config.baseURL}/search`, (req, res, ctx) 
     )
   }
 
+  if (q.toLowerCase() === 'some random guy') {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        response: {}
+      })
+    )
+  }
+
   if (q.toLowerCase() === 'schema change') {
     return res(
       ctx.status(200),
@@ -67,14 +76,14 @@ const getArtistIdHandler = rest.get(`${config.baseURL}/search`, (req, res, ctx) 
     return res(
       ctx.status(500),
       ctx.json({
-        response: 'Internal server error'
+        response: 'Mock 500 error'
       })
     )
   }
 })
 
 const getSongsHandler = rest.get(`${config.baseURL}/artists/${ARTIST_ID}/songs`, (req, res, ctx) => {
-  // console.log('Request is being intercepted:', req.url)
+  console.log('Request is being intercepted:', req.url.href)
   const page = req.url.searchParams.get('page')
 
   if (page === '1') {
@@ -91,6 +100,9 @@ const getSongsHandler = rest.get(`${config.baseURL}/artists/${ARTIST_ID}/songs`,
             },
             {
               title: 'In the end'
+            },
+            {
+              title: 'In the end' // Server might return duplicates
             }
           ],
           next_page: 2

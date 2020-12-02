@@ -1,5 +1,7 @@
 const {getArtistId, getSongs} = require('../helper/request')
 
+// First fetch artistId from given name
+// Then fetch all songs using that id
 exports.getArtistSongs = async (artist) => {
   try {
     const artistId = await getArtistId(artist)

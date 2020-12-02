@@ -1,6 +1,6 @@
 const {getArtistSongs} = require('./handler')
 
-const artist = 'linkin park'
+const artist = process.argv[2] || 'linkin park'
 
 const main = async () => {
   return getArtistSongs(artist)
