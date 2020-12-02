@@ -14,3 +14,9 @@
 - Or it can be run via Docker as well: `docker-compose up --build` (edit your artist name in Dockerfile last line)
 - Settings such as pagination etc.. can be configured in config/ folder. It's possible to config a proxy as well.
 - The API is mocked and tested using [msw](https://mswjs.io/) and [jest](https://jestjs.io/).
+
+### Potential improvements
+- Using TypeScript for better validations.
+- Define schema to make it adaptable to Genius API change if any.
+- Expand to other endpoints (can be done by adding more handlers).
+- Option to cache, so that we don't overload the API unless necessary.
